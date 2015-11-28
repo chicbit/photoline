@@ -25,7 +25,7 @@ trait MailApi
      *
      * @param $email
      */
-    public function (Request $r){
+    public function push(Request $r){
         //$message = view('mails.registrationForClerk', compact($email, $password));
         $messages = <<<EOT
 {
@@ -35,7 +35,7 @@ trait MailApi
 EOT;
         echo $messages;
 
-        $photo = Image::orderBy('created_at', 'DESC')->take(1)->get()
+        $photo = Image::orderBy('created_at', 'DESC')->take(1)->get();
         var_dump($photo);
        //  Mail::raw($messages, function($message)
        // {
