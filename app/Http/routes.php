@@ -12,10 +12,8 @@
 */
 
 Route::post('/mail', 'ApiController@send_mail');
+
 Route::get('/', function () {
     return view('welcome');
-});
-Route::get('/a', function(){
-    return view('a');
 });
 Route::get('/admin', 'ApiController@admin');
