@@ -27,21 +27,26 @@ trait MailApi
      */
     public function push(Request $r){
         //$message = view('mails.registrationForClerk', compact($email, $password));
-        $messages = <<<EOT
-{
-  "image": base64_img,
-  "date": datetime
-}
-EOT;
-        echo $messages;
-
+//         $messages = <<<EOT
+// {
+//   "image": base64_img,
+//   "date": datetime
+// }
+// EOT;
         $photo = Image::orderBy('created_at', 'DESC')->take(1)->get();
-        var_dump($photo);
+        $response = [
+          "image" => $photo[0]['path'],
+          "date" => $photo[0]['date'] 
+        ];
+
        //  Mail::raw($messages, function($message)
        // {
        //     $message->from('naoto.shibata510@gmail.com');
        //     $message->to('keita.mitsuhashi83@gmail.com');
        // });
+       // 
+       
+       return response()->json($response, 200);
     }
 
     public function save_s3(Request $r)
