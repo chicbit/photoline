@@ -16,6 +16,8 @@ class CreateImageTable extends Migration
             $table->increments('id');
             $table->longText('token');
             $table->timestamps();
+            $table->string('path');
+            $table->string('date');
         });
     }
 
