@@ -11,7 +11,8 @@
 |
 */
 
-Route::post('/mail', 'ApiController@send_mail');
+Route::get('/s3', 'ApiController@save_s3');
+Route::post('/push', 'ApiController@push');
 
 Route::get('/', function () {
     return view('welcome');

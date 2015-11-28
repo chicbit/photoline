@@ -16,6 +16,7 @@ use App\Http\Requests\EditShopProfileRequest;
 use Mail;
 use App\Models\Image;
 use Storage;
+use Illuminate\Support\Facades\App;
 
 trait MailApi
 {
@@ -24,11 +25,8 @@ trait MailApi
      *
      * @param $email
      */
-    public function send_mail(Request $r){
+    public function (Request $r){
         //$message = view('mails.registrationForClerk', compact($email, $password));
-        $path = storage_path()."/app/".$r->input('path');
-        $datetime = date("Y年m月d日 H時i分");
-        $base64_img = base64_encode(Storage::get($r->input('path')));
         $messages = <<<EOT
 {
   "image": $base64_img,
@@ -36,12 +34,29 @@ trait MailApi
 }
 EOT;
         echo $messages;
-        Storage::delete($r->input('path'));
         Image::create(['token' => $base64_img, 'date' => $datetime]);
-        Mail::raw($messages, function($message)
-       {
-           $message->from('naoto.shibata510@gmail.com');
-           $message->to('keita.mitsuhashi83@gmail.com');
-       });
+       //  Mail::raw($messages, function($message)
+       // {
+       //     $message->from('naoto.shibata510@gmail.com');
+       //     $message->to('keita.mitsuhashi83@gmail.com');
+       // });
+    }
+
+    public function save_s3(Request $r)
+    {
+        // S3に保存する
+        $result = $this->s3->putObject([
+                    'Bucket' => 'photoline-images',
+                    'Key'  => $r->input('path'),
+                    'SourceFile' => storage_path()."/app/".$r->input('path').".jpg",
+                    'ACL' => 'public-read',
+                    'MetaData' => [
+                        'ContentType' => 'images/jpeg',
+                    ],
+        ]);
+        Storage::delete($r->input('path'));
+        print $result['ObjectURL'];
+        $datetime = date("Y年m月d日 H時i分");
+        Image::create(['path' => $result['ObjectURL'], 'date' => $datetime]);
     }
 }
