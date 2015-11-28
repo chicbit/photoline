@@ -61,8 +61,8 @@ trait MailApi
                         'ContentType' => 'images/jpeg',
                     ],
         ]);
-        Storage::delete($r->input('path'));
-        print $result['ObjectURL'];
+        Storage::delete($r->input('path').".jpg");
+        print $result['ObjectURL']."\n";
         $datetime = date("Y年m月d日 H時i分");
         Image::create(['path' => $result['ObjectURL'], 'date' => $datetime]);
     }
