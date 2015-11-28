@@ -29,12 +29,14 @@ trait MailApi
         //$message = view('mails.registrationForClerk', compact($email, $password));
         $messages = <<<EOT
 {
-  "image": $base64_img,
-  "date": $datetime
+  "image": base64_img,
+  "date": datetime
 }
 EOT;
         echo $messages;
-        Image::create(['token' => $base64_img, 'date' => $datetime]);
+
+        $photo = Image::orderBy('created_at', 'DESC')->take(1)->get()
+        var_dump($photo);
        //  Mail::raw($messages, function($message)
        // {
        //     $message->from('naoto.shibata510@gmail.com');
