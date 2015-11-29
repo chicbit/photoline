@@ -15,6 +15,7 @@ use App\Http\Requests\PublishClerkAccountRequest;
 use App\Http\Requests\EditShopProfileRequest;
 use Mail;
 use App\Models\Image;
+use App\Models\Full;
 use Storage;
 use Illuminate\Support\Facades\App;
 use Services_Twilio;
@@ -51,6 +52,15 @@ trait MailApi
        return response()->json($response, 200);
     }
 
+    public function push_full(Request $r){
+        $photo = Full::orderBy('created_at', 'DESC')->take(1)->get();
+        $response = [
+          "image" => $photo[0]['path'],
+          "date" => $photo[0]['date'] 
+        ];
+       return response()->json($response, 200);
+    }
+
     public function save_s3(Request $r)
     {
         // S3に保存する
@@ -67,6 +77,24 @@ trait MailApi
         print $result['ObjectURL']."\n";
         $datetime = date("Y年m月d日 H時i分");
         Image::create(['path' => $result['ObjectURL'], 'date' => $datetime]);
+    }
+
+    public function save_s3_full(Request $r)
+    {
+        // S3に保存する
+        $result = $this->s3->putObject([
+                    'Bucket' => 'photoline-images',
+                    'Key'  => $r->input('path'),
+                    'SourceFile' => storage_path()."/app/".$r->input('path').".jpg",
+                    'ACL' => 'public-read',
+                    'MetaData' => [
+                        'ContentType' => 'images/jpeg',
+                  ],
+        ]);
+        Storage::delete($r->input('path').".jpg");
+        print $result['ObjectURL']."\n";
+        $datetime = date("Y年m月d日 H時i分");
+        Full::create(['path' => $result['ObjectURL'], 'date' => $datetime]);
     }
 
     public function twilio(){

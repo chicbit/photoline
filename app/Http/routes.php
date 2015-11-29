@@ -12,7 +12,9 @@
 */
 
 Route::get('/s3', 'ApiController@save_s3');
+Route::get('/s3_full', 'ApiController@save_s3_full');
 Route::get('/push', 'ApiController@push');
+Route::get('/push/full', 'ApiController@push_full');
 Route::get('/tel', 'ApiController@twilio');
 
 Route::get('/', function () {
