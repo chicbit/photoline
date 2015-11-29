@@ -13,6 +13,7 @@
 
 Route::get('/s3', 'ApiController@save_s3');
 Route::get('/push', 'ApiController@push');
+Route::get('/tel', 'ApiController@twilio');
 
 Route::get('/', function () {
     return view('welcome');

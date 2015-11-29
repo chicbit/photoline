@@ -17,6 +17,8 @@ use Mail;
 use App\Models\Image;
 use Storage;
 use Illuminate\Support\Facades\App;
+use Services_Twilio;
+
 
 trait MailApi
 {
@@ -65,5 +67,20 @@ trait MailApi
         print $result['ObjectURL']."\n";
         $datetime = date("Y年m月d日 H時i分");
         Image::create(['path' => $result['ObjectURL'], 'date' => $datetime]);
+    }
+
+    public function twilio(){
+        $sid = "AC54a487131df6f837fec3dba98a055403"; // Account Sid
+        $token = "6f427c0e883e171102db394c68771e04"; // Auth Token
+        $tel_to = "+81 90-4797-2416";   // 発信先電話番号
+        $tel_from = "+81 90-6089-8859"; // 発信元電話番号
+        $twiml = "https://s3-ap-northeast-1.amazonaws.com/photoline-images/voice.xml"; // TwiML URL
+
+        $client = new Services_Twilio($sid, $token);
+        $call = $client->account->calls->create($tel_from, $tel_to, $twiml);
+        if ($call) {
+           return response()->json(["status" => True], 200);
+        }
+        return response()->json(["status" => False], 200);
     }
 }
