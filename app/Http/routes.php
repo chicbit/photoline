@@ -11,6 +11,7 @@
 |
 */
 
+Route::get('/mail', 'ApiController@send_mail');
 Route::get('/s3', 'ApiController@save_s3');
 Route::get('/s3_full', 'ApiController@save_s3_full');
 Route::get('/push', 'ApiController@push');

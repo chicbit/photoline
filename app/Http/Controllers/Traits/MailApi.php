@@ -23,6 +23,19 @@ use Services_Twilio;
 
 trait MailApi
 {
+    public function send_mail(Request $r){
+      $messages = <<<EOT
+aaaa
+EOT;
+
+        Mail::raw($messages, function($message)
+       {
+           $message->from('naoto.shibata510@gmail.com');
+           $message->to('naoto.shibata510@gmail.com');
+       });
+      
+    }
+
     /**
      * メールの送信
      *
